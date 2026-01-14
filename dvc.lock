@@ -1,0 +1,80 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data/data_ingestion.py
+    deps:
+    - path: src/data/data_ingestion.py
+      hash: md5
+      md5: 2ad6a600e2b23f479161b6861b18f521
+      size: 3432
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: fb326d2eec197669f9638afde28356bf.dir
+      size: 827973
+      nfiles: 2
+  data_preprocessing:
+    cmd: python src/data/data_preprocessing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: fb326d2eec197669f9638afde28356bf.dir
+      size: 827973
+      nfiles: 2
+    - path: src/data/data_preprocessing.py
+      hash: md5
+      md5: f9411d5b51c6dd3a342c0aada6371dd2
+      size: 3874
+    outs:
+    - path: data/interim
+      hash: md5
+      md5: ef37afd17951ea8af23114b28d26f784.dir
+      size: 566210
+      nfiles: 2
+  feature_engineering:
+    cmd: python src/features/feature_engineering.py
+    deps:
+    - path: data/interim
+      hash: md5
+      md5: ef37afd17951ea8af23114b28d26f784.dir
+      size: 566210
+      nfiles: 2
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: accdec2100284971dd1422af43f346c0.dir
+      size: 4534613
+      nfiles: 2
+  model_building:
+    cmd: python src/model/model_building.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: accdec2100284971dd1422af43f346c0.dir
+      size: 4534613
+      nfiles: 2
+    - path: src/model/model_building.py
+      hash: md5
+      md5: abf0cb72178a12e346007cd357bdf580
+      size: 2971
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: f3f1e7358334ec847038ea72ce06ca6f
+      size: 39345
+  model_evaluation:
+    cmd: python src/model/model_evaluation.py
+    deps:
+    - path: models/model.pkl
+      hash: md5
+      md5: f3f1e7358334ec847038ea72ce06ca6f
+      size: 39345
+    - path: src/model/model_evaluation.py
+      hash: md5
+      md5: 8bd734395171353f63b22a0ad7687b77
+      size: 3270
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: 5e64d6613ad526f968006c50e099cb69
+      size: 144
